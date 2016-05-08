@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Cmag.pk</title>
+        <title>Cmag.pk | Login</title>
         
         <!-- Vendor CSS -->
         <link href="{{ asset('assets/material/vendors/animate-css/animate.min.css') }}" rel="stylesheet">
