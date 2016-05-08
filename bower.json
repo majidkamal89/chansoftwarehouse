@@ -1,0 +1,7 @@
+{
+  "name": "advanta",
+  "dependencies": {
+    "font-awesome": "~4.5.0",
+    "datatables": "~1.10.10"
+  }
+}
