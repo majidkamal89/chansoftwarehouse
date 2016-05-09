@@ -57,7 +57,7 @@ Route::group(array('prefix' => '/'), function () {
     Route::get('activate/{userId}/{activationCode}', array('as' => 'activate', 'uses' => 'AuthController@getActivate'));
 
     # Dashboard / Index
-	Route::get('/', array('as' => 'dashboard','uses' => 'AdvantaController@showHome'));
+	Route::get('/', array('as' => 'dashboard','uses' => 'UsersController@showHome'));
 
 	# User Management
     Route::group(array('prefix' => 'users','before' => 'Sentinel'), function () {
@@ -90,7 +90,7 @@ Route::group(array('prefix' => '/'), function () {
 	# Remaining pages will be called from below controller method
 	# in real world scenario, you may be required to define all routes manually
 
-	Route::get('{name?}', 'AdvantaController@showView');
+	Route::get('{name?}', 'UsersController@showView');
 	
 	Route::get('pickers', function () {
 	    return View::make('pickers');
