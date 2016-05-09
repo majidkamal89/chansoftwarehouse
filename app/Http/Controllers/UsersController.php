@@ -13,7 +13,7 @@ use App\User;
 use Cartalyst\Sentinel\Laravel\Facades\Activation;
 use Hash;
 
-class UsersController extends AdvantaController
+class UsersController extends Controller
 {
     protected $countries = array(
         ""   => "Select Country",
@@ -528,5 +528,30 @@ class UsersController extends AdvantaController
         // fallback
         return View('/404');
     }
+	
+	public function showHome()
+    {
+    	if(Sentinel::check()){
+			return View('index');
+		}
+		else{
+			return Redirect::to('signin')->with('error', 'You must be logged in!');
+		}
+    }
 
+    public function showView($name=null)
+    {
+
+    	if(View::exists('/'.$name))
+		{
+			if(Sentinel::check())
+				return View('/'.$name);
+			else
+				return Redirect::to('signin')->with('error', 'You must be logged in!');
+		}
+		else
+		{
+			return View('404');
+		}
+    }
 }

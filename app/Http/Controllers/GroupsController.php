@@ -7,7 +7,7 @@ use Redirect;
 use Lang;
 use URL;
 
-class GroupsController extends AdvantaController
+class GroupsController extends Controller
 {
     /**
      * Show a list of all the groups.
