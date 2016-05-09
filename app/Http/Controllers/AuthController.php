@@ -11,7 +11,7 @@ use \Cartalyst\Sentinel\Checkpoints\NotActivatedException;
 use \Cartalyst\Sentinel\Checkpoints\ThrottlingException;
 use Reminder;
 use Mail;
-class AuthController extends AdvantaController
+class AuthController extends Controller
 {
     /**
      * Account sign in.
