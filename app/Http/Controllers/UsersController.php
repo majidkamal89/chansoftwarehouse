@@ -185,6 +185,12 @@ class UsersController extends Controller
 
         $countries = $this->countries;
         $status = Activation::completed($user);
+		
+		/*echo '<pre>';
+		print_r($userRoles);
+		echo '<br>';
+		print_r($roles);
+		exit;*/
 
         // Show the page
         return View('/users/edit', compact('user', 'roles', 'userRoles','countries','status'));
