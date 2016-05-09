@@ -86,6 +86,12 @@ Route::group(array('prefix' => '/'), function () {
 		Route::get('any_user', 'UsersController@getUserAccess');
 		Route::get('admin_only', 'UsersController@getAdminOnlyAccess');
     });
+
+    # Category Management
+    Route::group(array('prefix' => 'categories','before' => 'Sentinel'), function () {
+        Route::get('/', array('as' => 'categories', 'uses' => 'CategoryController@index'));
+        Route::post('/create', array('as' => 'createCategory', 'uses' => 'CategoryController@create'));
+    });
 	
 	# Remaining pages will be called from below controller method
 	# in real world scenario, you may be required to define all routes manually

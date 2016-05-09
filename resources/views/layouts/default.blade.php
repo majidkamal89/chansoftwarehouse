@@ -132,6 +132,16 @@
                                     </li>
                                 </ul>
                             </li>
+
+                            <li {!! (Request::is('categories') ? 'class="sub-menu active"' : 'class="sub-menu"') !!}>
+                                <a href=""><i class="md md-now-widgets"></i> Categories Management</a>
+
+                                <ul>
+                                    <li>
+                                        <a {!! (Request::is('categories') ? 'class="active"' : '') !!} href="{{ URL::to('/categories') }}">Categories</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>
