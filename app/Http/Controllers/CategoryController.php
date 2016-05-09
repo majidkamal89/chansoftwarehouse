@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Validator;
+use Redirect;
 
 class CategoryController extends Controller
 {
@@ -26,7 +28,20 @@ class CategoryController extends Controller
      */
     public function create(Request $request)
     {
-        print_r($request->all());
+        //print_r($request->all());
+        $rules = array('category_title' => 'required');
+        $messages = array('category_title' => 'Category title is required!');
+        $Validator = Validator::make($request->all(), $rules, $messages);
+        if($Validator->fails())
+        {
+            echo "false";
+        }
+        else
+        {
+            Category::create($request->all());
+            echo "done";
+            //return Redirect::to('admin.categories.index');
+        }
     }
 
     /**
