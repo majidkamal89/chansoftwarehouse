@@ -185,9 +185,14 @@ class UsersController extends Controller
 
         $countries = $this->countries;
         $status = Activation::completed($user);
-
+		
+		$userRole = '';
+		
+		foreach($userRoles as $key => $val) {
+			$userRole = $key;
+		}
         // Show the page
-        return View('/users/edit', compact('user', 'roles', 'userRoles','countries','status'));
+        return View('/users/edit', compact('user', 'roles', 'userRole','countries','status'));
     }
 
     /**
@@ -318,10 +323,10 @@ class UsersController extends Controller
                     );
 
                     // Send the activation code through email
-                    Mail::send('emails.register-activate', $data, function ($m) use ($user) {
+                    /*Mail::send('emails.register-activate', $data, function ($m) use ($user) {
                         $m->to($user->email, $user->first_name . ' ' . $user->last_name);
                         $m->subject('Welcome ' . $user->first_name);
-                    });
+                    });*/
 
                 }
             }
