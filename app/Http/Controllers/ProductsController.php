@@ -19,8 +19,7 @@ class ProductsController extends Controller
     {
         // Get all Products
         $products = Product::All();
-        print_r($products); 
-        return View('products.index',compact('users'));
+        return View('admin.product',compact('products'));
     }
 
     /**
