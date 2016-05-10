@@ -142,6 +142,18 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li {!! (Request::is('products') ? 'class="sub-menu active"' : 'class="sub-menu"') !!}>
+                                <a href=""><i class="md md-shopping-cart"></i> Product Management</a>
+
+                                <ul>
+                                    <li>
+                                        <a {!! (Request::is('products') ? 'class="active"' : '') !!} href="{{ URL::to('/products') }}">Products</a>
+                                    </li>
+                                    <li>
+                                        <a {!! (Request::is('products/deleted') ? 'class="active"' : '') !!} href="{{ URL::to('products/deleted') }}">Deleted Products</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 </div>

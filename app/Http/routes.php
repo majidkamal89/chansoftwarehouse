@@ -71,6 +71,14 @@ Route::group(array('prefix' => '/'), function () {
 		Route::get('{userId}/restore', array('as' => 'restore/user', 'uses' => 'UsersController@getRestore'));
 		Route::get('{userId}', array('as' => 'users.show', 'uses' => 'UsersController@show'));
 	});
+        
+        # Products Management
+    Route::group(array('prefix' => 'products','before' => 'Sentinel'), function () {
+    	Route::get('/', array('as' => 'users', 'uses' => 'ProductsController@getIndex'));
+    	});        
+        
+        
+        
 	Route::get('deleted_users',array('as' => 'deleted_users','before' => 'Sentinel', 'uses' => 'UsersController@getDeletedUsers'));
 
 	# Group Management
