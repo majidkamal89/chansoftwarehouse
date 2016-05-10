@@ -15,7 +15,7 @@
     
     <body class="four-zero-content">        
         <div class="four-zero">
-            <h2>SEX!</h2>
+            <h3>Something Went Wrong :( !</h3>
             <small>Nah.. it's 404</small>
             
             <footer>

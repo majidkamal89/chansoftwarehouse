@@ -21,7 +21,12 @@ class ProductsController extends Controller
         $products = Product::All();
         return View('admin.product',compact('products'));
     }
-
+    
+    public function add()
+    {
+        return View('admin.addProduct');
+    }
+    
     /**
      * Show the form for creating a new resource.
      *

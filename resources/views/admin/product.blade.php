@@ -17,7 +17,7 @@ Users List
 
         <div class="card">
             <div class="card-header text-right">
-                <a id="openAddFrom" class="btn btn-primary btn-sm waves-effect waves-button" href="#"> Add New Product</a>
+                <a id="openAddFrom" class="btn btn-primary btn-sm waves-effect waves-button" href="{!! URL::to('products/add') !!}"> Add New Product</a>
             </div>
 
             <div class="card-body table-responsive">
