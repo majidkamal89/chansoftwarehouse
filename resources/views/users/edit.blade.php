@@ -160,7 +160,7 @@ Users
                                 <select class="form-control" name="group[]">
                                     <option value="">Select Group...</option>
                                     @foreach($roles as $group)
-                                         <option value="{{ $group->id }}" @if($group->id == $userRoles) selected="selected" @endif >{{ $group->name}}</option>
+                                         <option value="{{ $group->id }}" @if($group->id == $userRole) selected="selected" @endif >{{ $group->name}}</option>
                                     @endforeach
 
                                 </select>
