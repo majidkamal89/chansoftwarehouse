@@ -8,6 +8,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Validator;
 use Redirect;
+use App\CategoryModel;
+use DB;
+use Input;
 
 class CategoryController extends Controller
 {
@@ -18,7 +21,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return View('admin.categories.index');
+        $categories = DB::table('category')->orderBy('id', 'desc')->paginate(10);
+        return View('admin.categories.index',compact('categories'));
     }
 
     /**
@@ -32,15 +36,30 @@ class CategoryController extends Controller
         $rules = array('category_title' => 'required');
         $messages = array('category_title' => 'Category title is required!');
         $Validator = Validator::make($request->all(), $rules, $messages);
+        $edit_id = Input::get('edit_id');
         if($Validator->fails())
         {
-            echo "false";
+            echo 0;
         }
         else
         {
-            Category::create($request->all());
-            echo "done";
-            //return Redirect::to('admin.categories.index');
+            $status = ($request->is_removed == 'on') ? 1 : 0;
+            $request->request->add(array('is_removed' => $status));
+            $input = Input::except('_token');
+            if($request->edit_id)
+            {
+                CategoryModel::where('id', $edit_id)->update(
+                [
+                'category_title' => $request->category_title,
+                'is_removed' => $status
+                ]);
+                echo json_encode($request->all());
+            }
+            else
+            {
+                CategoryModel::create($request->all());
+                echo 1;
+            }
         }
     }
 

@@ -23,7 +23,7 @@ Categories
         <div class="block-header">
             <h2>Categories</h2>
         </div>
-        
+        <div id="alert_box_success" class="alert alert-success hide" role="alert">Category add/update successfully.</div>
         <div class="card">
             <div class="card-header">
                 <h2><small><a href="#" class="btn btn-primary btn-sm" id="openAddFrom"> Add New Category</a></small></h2>
@@ -42,17 +42,20 @@ Categories
                     </tr>
                     </thead>
                     <tbody>
+                        @foreach($categories as $category)
                     <tr>
-                       <td>1</td>
-                       <td>Shoes</td>
-                       <td>Active</td>
+                       <td>{!! $category->id !!}</td>
+                       <td id="txt_category_title_{!! $category->id !!}">{!! $category->category_title !!}</td>
+                       <td id="status_{!! $category->id !!}">{!! $category->is_removed == '1' ? 'Active' : 'InActive' !!}</td>
                        <td>
-                          <button class="btn btn-primary btn-sm">Edit</button>
+                          <button class="btn btn-primary btn-sm EditRecord" id="{!! $category->id !!}">Edit</button>
                           <button class="btn btn-danger btn-sm">Delete</button>
                        </td>
-                    </tr>      
+                    </tr>
+                        @endforeach      
                     </tbody>
                 </table>
+                {!! $categories->render() !!}
             </div>
         </div>
     </div>
@@ -92,16 +95,17 @@ Categories
             </div>
             <div class="modal-body">
                 <div class="card">
+                    <div id="alert_box" class="alert alert-danger hass-error hide" role="alert">Please enter required data.</div>
                     <div class="card-body card-padding">
                         <form role="form" method="post" id="categoryForm" action="{{ URL::route('createCategory') }}">
                            <input type="hidden" name="_token" value="{!! csrf_token() !!}" /> 
-                            <div class="form-group fg-line">
+                            <div class="form-group fg-line" id="divCategoryName">
                                 <label for="category_title">Category Name</label>
                                 <input type="text" class="form-control input-sm" id="category_title" name="category_title">
                             </div>
-                            <div class="checkbox">
+                            <div class="checkbox" id="checkboxStatus">
                                 <label>
-                                    <input type="checkbox" name="is_removed">
+                                    <input type="checkbox" name="is_removed" id="is_removed">
                                     <i class="input-helper"></i>
                                     Enable/Disable
                                 </label>
@@ -115,12 +119,70 @@ Categories
         </div>
     </div>
 </div>
+<div class="modal fade" id="edit_category" tabindex="-2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Category</h4>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div id="edit_alert_box" class="alert alert-danger hass-error hide" role="alert">Please enter required data.</div>
+                    <div class="card-body card-padding">
+                        <form role="form" method="post" id="edit_category_form" action="{{ URL::route('createCategory') }}">
+                           <input type="hidden" name="_token" value="{!! csrf_token() !!}" /> 
+                           <input type="hidden" name="edit_id" id="edit_id" value="" /> 
+                            <div class="form-group fg-line" id="divCategoryName">
+                                <label for="category_title">Category Name</label>
+                                <input type="text" class="form-control input-sm" id="edit_category_title" name="category_title" value="">
+                            </div>
+                            <div class="checkbox" id="checkboxStatus">
+                                <label>
+                                    <input type="checkbox" name="is_removed" id="edit_is_removed">
+                                    <i class="input-helper"></i>
+                                    Enable/Disable
+                                </label>
+                            </div>
+                            
+                            <button type="button" id="btn_edit_category" class="btn btn-primary btn-sm m-t-10 waves-effect waves-button waves-float">Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    $(document).ready(function (){
+        // $("#alert_box_success").addClass('hide');
+    });
     $(document).ready(function () {
         $(document).on('click', '#openAddFrom', function(e){
+            $("#alert_box").addClass('hide');
             $("#add_category").modal('show');
             e.preventDefault();
+            $("#category_title").val('');
+            $("#is_removed").prop('checked',false);
+            $("#divCategoryName").removeClass('');
+            $("#checkboxStatus").removeClass('');
         });
+
+        $(document).on('click', '.EditRecord', function (e){
+            id = $(this).attr('id');
+            $("#edit_id").val('');
+            $("#edit_id").val(id);
+            $("#edit_category").modal('show');
+            var txt_category_title = $("#txt_category_title_"+id).html();
+            $("#edit_category_title").val(txt_category_title);
+            var status = $("#status_"+id).html();
+            if(status == "Active")
+                $("#edit_is_removed").prop('checked',true);
+            else
+                $("#edit_is_removed").prop('checked',false);            
+            e.preventDefault();
+            //alert(id);
+        })
 
         $(document).on('click', '#save_category', function() {
             var formData = $("#categoryForm").serialize();
@@ -128,12 +190,49 @@ Categories
             $.ajax({
                 url: postUrl,
                 type: 'POST',
+                dataType:"json",
                 data: formData,
                 success: function(response){
-                    alert(response);
+                    if(response == 0){
+                        $("#alert_box").removeClass('hide');
+                        $("#divCategoryName").addClass('hass-error');
+                        $("#checkboxStatus").addClass('hass-error');
+                    }
+                    else
+                    {
+                        $("#alert_box_success").removeClass('hide');
+                        $('#alert_box_success').delay(2000).fadeOut();
+                        $("#add_category").modal('hide');
+                    }
                 },
             });
+            
         });
+
+        // Edit category
+         $(document).on('click', '#btn_edit_category', function() {
+            var formData = $("#edit_category_form").serialize();
+            var postUrl = $("#edit_category_form").attr('action');
+            $.ajax({
+                url: postUrl,
+                type: 'POST',
+                data: formData,
+                success: function(response){
+                    var obj = jQuery.parseJSON( response );
+                    //console.log(obj.category_title); return false;
+                    $("#txt_category_title_"+obj.edit_id).html(obj.category_title);
+                    if(obj.is_removed == 1)
+                        $("#status_"+obj.edit_id).html('Active');
+                    else
+                        $("#status_"+obj.edit_id).html('InActive');
+                    $("#alert_box_success").removeClass('hide');
+                    $('#alert_box_success').delay(2000).fadeOut();
+                    $("#edit_category").modal('hide');
+                },
+            });
+            
+        });
+
     });
 </script>
 @stop
