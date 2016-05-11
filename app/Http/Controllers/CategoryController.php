@@ -116,6 +116,8 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        CategoryModel::where('id', '=', $id)->delete();
+        $ID = CategoryModel::where('id', '=', $id)->first();
+        echo $ID;
     }
 }
