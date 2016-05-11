@@ -26,16 +26,15 @@
                     <!-- CSRF Token -->
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-                    <div class="form-group {{ $errors->
-                        first('name', 'has-error') }}">
+                    <div class="form-group {{ $errors->first('group_name', 'has-error') }}">
                         <label for="title" class="col-sm-2 control-label">
                             @lang('groups/form.name')
                         </label>
                         <div class="col-sm-5">
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Group Name" value="{!! Input::old('name') !!}">
+                            <input type="text" id="group_name" name="group_name" class="form-control" placeholder="Group Name" value="{!! Input::old('group_name') !!}">
                         </div>
                         <div class="col-sm-4">
-                            {!! $errors->first('name', '<span class="help-block">:message</span> ') !!}
+                            {!! $errors->first('group_name', '<span class="help-block">:message</span> ') !!}
                         </div>
                     </div>
 
