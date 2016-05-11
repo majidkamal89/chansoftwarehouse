@@ -26,10 +26,8 @@
                     <thead>
                     <tr>
                         <tr>
-                            <th>@lang('groups/table.id')</th>
-                            <th>@lang('groups/table.name')</th>
-                            <th>@lang('groups/table.users')</th>
-                            <th>@lang('groups/table.created_at')</th>
+                            <th>Group Name</th>
+                            <th>Status</th>
                             <th>@lang('groups/table.actions')</th>
                         </tr>
                     </tr>
@@ -38,32 +36,24 @@
 
                         @foreach ($roles as $role)
                         <tr>
-                            <td>{!! $role->id !!}</td>
-                            <td>{!! $role->name !!}</td>
-                            <td>{!! $role->users()->count() !!}</td>
-                            <td>{!! $role->created_at->diffForHumans() !!}</td>
+                            <td>{!! $role->group_name !!}</td>
+                            <td>@if($role->is_removed == 0) Active @else In-Active @endif</td>
                             <td>
                                 <a class="btn btn-primary btn-sm" href="{{ route('update/group', $role->id) }}">
                                         Edit
                                     </a>
                                     <!-- let's not delete 'Admin' group by accident -->
-                                    @if ($role->id !== 1)
-                                        @if($role->users()->count())
-                                            <a href="#" data-toggle="modal" data-target="#users_exists" data-name="{!! $role->name !!}" class="users_exists">
-                                                <i class="livicon" data-name="warning-alt" data-size="18" data-loop="true" data-c="#f56954" data-hc="#f56954" title="users exists"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('confirm-delete/group', $role->id) }}" data-toggle="modal" data-target="#delete_confirm">
-                                                <i class="livicon" data-name="remove-alt" data-size="18" data-loop="true" data-c="#f56954" data-hc="#f56954" title="delete group"></i>
-                                            </a>
-                                        @endif
-
+                                    @if($role->id !== 1)
+                                        <a href="{{ route('confirm-delete/group', $role->id) }}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#delete_confirm">
+                                            Delete
+                                        </a>
                                     @endif
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+                {!! $roles->render() !!}
                 @else
                     @lang('general.noresults')
                 @endif

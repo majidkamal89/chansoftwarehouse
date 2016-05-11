@@ -1,4 +1,6 @@
 <?php namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use Sentinel;
 use View;
 use Validator;
@@ -6,9 +8,17 @@ use Input;
 use Redirect;
 use Lang;
 use URL;
-
+use App\Group;
 class GroupsController extends Controller
 {
+	
+	public function __construct()
+    {
+        // CSRF Protection
+        //$this->beforeFilter('csrf', array('on' => 'post'));
+        //$this->messageBag = new MessageBag;
+        $this->group = new Group;
+    }
     /**
      * Show a list of all the groups.
      *
@@ -17,7 +27,7 @@ class GroupsController extends Controller
     public function getIndex()
     {
         // Grab all the groups
-        $roles = Sentinel::getRoleRepository()->all();
+        $roles = Group::paginate(5);//Sentinel::getRoleRepository()->all();
 
         // Show the page
         return View('/groups/index', compact('roles'));
@@ -39,36 +49,44 @@ class GroupsController extends Controller
      *
      * @return Redirect
      */
-    public function postCreate()
+    public function postCreate(Request $request)
     {
         // Declare the rules for the form validation
         $rules = array(
-            'name' => 'required',
-            'slug' => 'required|unique:roles'
+            'group_name' => 'required|unique:groups'
         );
 
         //manually add slug to Input array for validation
-        Input::merge(array('slug' => str_slug(Input::get('name'))));
+        //Input::merge(array('slug' => str_slug(Input::get('name'))));
 
         // Create a new validator instance from our validation rules
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         // If validation fails, we'll exit the operation now.
         if ($validator->fails()) {
             // Ooops.. something went wrong
             return Redirect::back()->withInput()->withErrors($validator);
         }
+		$request->request->add(array('is_removed' => '0'));
+		$input = Input::except(['_method', '_token']);
+		$groupId = Group::insertGetId($input);
+		if($groupId > 0) {
+			return Redirect::route('groups')->with('error', Lang::get('groups/message.success.create'));
+		} else {
+			return Redirect::route('create/group')->withInput()->with('error', Lang::get('groups/message.error.create'));
+		}
 
-        if ($role = Sentinel::getRoleRepository()->createModel()->create([
+        /*if ($role = Sentinel::getRoleRepository()->createModel()->create([
             'name' => Input::get('name'),
             'slug' => str_slug(Input::get('name'))
         ])) {
             // Redirect to the new group page
             return Redirect::route('groups')->with('success', Lang::get('groups/message.success.create'));
-        }
+        }*/
+		
 
         // Redirect to the group create page
-        return Redirect::route('create/group')->withInput()->with('error', Lang::get('groups/message.error.create'));
+        //return Redirect::route('create/group')->withInput()->with('error', Lang::get('groups/message.error.create'));
     }
 
     /**
@@ -84,7 +102,7 @@ class GroupsController extends Controller
         
         try {
             // Get the group information
-            $role = Sentinel::findRoleById($id);
+            $role = Group::find($id);
 
         } catch (GroupNotFoundException $e) {
             // Redirect to the groups management page
@@ -101,11 +119,11 @@ class GroupsController extends Controller
      * @param  int      $id
      * @return Redirect
      */
-    public function postEdit($id = null)
+    public function postEdit($id, Request $request)
     {
         try {
             // Get the group information
-            $group = Sentinel::findRoleById($id);
+            $group = Group::find($id);
         } catch (GroupNotFoundException $e) {
             // Redirect to the groups management page
             return Rediret::route('groups')->with('error', Lang::get('groups/message.group_not_found', compact('id')));
@@ -113,11 +131,11 @@ class GroupsController extends Controller
 
         // Declare the rules for the form validation
         $rules = array(
-            'name' => 'required',
+            'group_name' => 'required',
         );
 
         // Create a new validator instance from our validation rules
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = Validator::make($request->all(), $rules);
 
         // If validation fails, we'll exit the operation now.
         if ($validator->fails()) {
@@ -126,12 +144,12 @@ class GroupsController extends Controller
         }
 
         // Update the group data
-        $group->name        = Input::get('name');
+        $group->group_name        = $request->group_name;
 
         // Was the group updated?
         if ($group->save()) {
             // Redirect to the group page
-            return Redirect::route('groups')->with('success', Lang::get('groups/message.success.update'));
+            return Redirect::route('groups');//->with('success', Lang::get('groups/message.success.update'));
         } else {
             // Redirect to the group page
             return Redirect::route('update/group', $id)->with('error', Lang::get('groups/message.error.update'));
