@@ -75,7 +75,8 @@ Route::group(array('prefix' => '/'), function () {
         # Products Management
     Route::group(array('prefix' => 'products','before' => 'Sentinel'), function () {
     	Route::get('/', array('as' => 'users', 'uses' => 'ProductsController@getIndex'));
-        Route::get('add', array('as' => 'add/product', 'uses' => 'ProductsController@add'));
+        Route::get('add', array('as' => 'product/add', 'uses' => 'ProductsController@add'));
+        Route::post('save', array('as' => 'products/save', 'uses' => 'ProductsController@save'));
     	});        
         
         
