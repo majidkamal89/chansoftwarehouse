@@ -102,6 +102,7 @@ Route::group(array('prefix' => '/'), function () {
         Route::get('/', array('as' => 'categories', 'uses' => 'CategoryController@index'));
         Route::post('/create', array('as' => 'createCategory', 'uses' => 'CategoryController@create'));
         Route::get('categoryDel/{id}', array('as' => 'categoryDel', 'uses' => 'CategoryController@destroy'));
+        Route::get('/getData', array('as' => 'getData', 'uses' => 'CategoryController@getData'));
     });
 	
 	# Remaining pages will be called from below controller method

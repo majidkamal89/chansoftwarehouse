@@ -11,6 +11,7 @@ use Redirect;
 use App\CategoryModel;
 use DB;
 use Input;
+use Response;
 
 class CategoryController extends Controller
 {
@@ -108,6 +109,12 @@ class CategoryController extends Controller
         //
     }
 
+    public function getData()
+    {
+        $categories = CategoryModel::orderBy('id', 'desc')->paginate(10);
+        return Response::json(View('admin/categories/table', compact('categories'))->render());
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -117,7 +124,6 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         CategoryModel::where('id', '=', $id)->delete();
-        $ID = CategoryModel::where('id', '=', $id)->first();
-        echo $ID;
+        echo $id;
     }
 }

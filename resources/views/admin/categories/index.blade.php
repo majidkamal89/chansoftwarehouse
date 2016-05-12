@@ -24,39 +24,15 @@ Categories
             <h2>Categories</h2>
         </div>
         <div id="alert_box_success" class="alert alert-success hide" role="alert">Category add/update successfully.</div>
-        <div id="delete_alert_box" class="alert alert-success hide" role="alert">Category deleted successfully.</div>
+        <div id="delete_alert_box" class="alert alert-success hide" role="alert"></div>
         <div class="card">
             <div class="card-header">
                 <h2><small><a href="#" class="btn btn-primary btn-sm" id="openAddFrom"> Add New Category</a></small></h2>
             </div>
 
-            <div class="card-body table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <tr>
-                            <th>ID</th>
-                            <th>Category Name</th>
-                            <th>Status</th>
-                            <th class="action-css">Action</th>
-                        </tr>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($categories as $category)
-                    <tr id="row_{!! $category->id !!}">
-                       <td>{!! $category->id !!}</td>
-                       <td id="txt_category_title_{!! $category->id !!}">{!! $category->category_title !!}</td>
-                       <td id="status_{!! $category->id !!}">{!! $category->is_removed == '1' ? 'Active' : 'InActive' !!}</td>
-                       <td>
-                          <button class="btn btn-primary btn-sm EditRecord" id="{!! $category->id !!}">Edit</button>
-                          <button class="btn btn-danger btn-sm DeleteDialogConfirm" action="{!! URL::route('categoryDel', $category->id) !!}" id="{!! $category->id !!}">Delete</button>
-                       </td>
-                    </tr>
-                        @endforeach      
-                    </tbody>
-                </table>
-                {!! $categories->render() !!}
+            <div class="card-body table-responsive" id="category_list">
+                @include('admin/categories/table')
+                
             </div>
         </div>
     </div>
@@ -221,6 +197,7 @@ Categories
                         $("#alert_box_success").removeClass('hide');
                         $('#alert_box_success').delay(2000).fadeOut();
                         $("#add_category").modal('hide');
+                        loadPage('category_list');
                     }
                 },
             });
@@ -246,6 +223,7 @@ Categories
                     $("#alert_box_success").removeClass('hide');
                     $('#alert_box_success').delay(2000).fadeOut();
                     $("#edit_category").modal('hide');
+                    loadPage('category_list');
                 },
             });
             
@@ -273,20 +251,29 @@ Categories
                 url: postUrl,
                 type: 'GET',
                 dataType:"json",
-                //data: {'id':id},
                 success: function(response){
-                    console.log(response);
                     $("#delete_confirm").modal('hide');
                     $("#row_"+response).remove();
                     $("#delete_alert_box").removeClass('hide');
+                    $("#delete_alert_box").html('');
+                    $("#delete_alert_box").html('Category deleted successfully.');
+                    $('#delete_alert_box').delay(2000).fadeOut();
+                    loadPage('category_list');
                 },
             });
             e.preventDefault();
         }); 
-
-         
-
     });
+function loadPage(id){
+    $.ajax({
+        url: '/categories/getData',
+        type: 'GET',
+        dataType:"json",
+        success: function(response){
+            $("#"+id).html(response);
+        },
+    });
+}
 </script>
 <style type="text/css">
 body,
