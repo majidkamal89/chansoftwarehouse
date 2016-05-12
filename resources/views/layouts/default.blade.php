@@ -187,6 +187,7 @@
         <script src="{{ asset('assets/material/js/charts.js') }}"></script>
         
         <script src="{{ asset('assets/material/js/functions.js') }}"></script>
+        <script src="{{ asset('assets/js/admin.js') }}"></script>
         <!-- begin page level js -->
         @yield('footer_scripts')
     </body>

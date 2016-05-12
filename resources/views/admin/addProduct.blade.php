@@ -33,7 +33,7 @@ Users
                 </div
                 ></div>
             <div class="card-body card-padding">
-                <form action="{{ route('create/user') }}" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                <form method="POST" class="form-horizontal" id="saveProduct" role="form" enctype="multipart/form-data">
                     <!-- CSRF Token -->
                     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
@@ -115,9 +115,7 @@ Users
                     </div>
                     <div class="form-group text-right">
                         <div class="col-sm-offset-8 col-sm-4">
-                            <button type="submit" class="btn btn-success">
-                                @lang('button.save')
-                            </button>
+                            <a class="btn btn-success saveProduct" href="javascript:">Save</a>
                             <a class="btn btn-danger" href="{!! URL::route('users') !!}">
                                 @lang('button.cancel')
                             </a>

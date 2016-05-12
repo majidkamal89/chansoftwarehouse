@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Product;
-
+use Input;
 class ProductsController extends Controller
 {
     /**
@@ -22,11 +22,18 @@ class ProductsController extends Controller
         return View('admin.product',compact('products'));
     }
     
+    //Function to Load Add product View
     public function add()
     {
         return View('admin.addProduct');
     }
     
+    // Function to save product information
+    public function save()
+    {
+        print_r(Input::all());
+        
+    }
     /**
      * Show the form for creating a new resource.
      *
